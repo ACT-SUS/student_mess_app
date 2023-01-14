@@ -1,20 +1,39 @@
-import React, { useEffect, useState } from 'react'
-import { StyleSheet, View, TouchableOpacity, Image, ScrollView } from 'react-native'
-import { Text } from 'react-native-elements'
-import { StatusBar } from 'expo-status-bar'
-import { MaterialCommunityIcons, Ionicons, MaterialIcons, Fontisto } from '@expo/vector-icons'
-import MenuTile from '../components/MenuTile'
+import React, {useEffect, useLayoutEffect, useState} from 'react'
+import {StyleSheet, View, TouchableOpacity, Modal, Image, SafeAreaView, ScrollView} from 'react-native'
+import {Text, Button} from 'react-native-elements'
+import {StatusBar} from 'expo-status-bar'
+import {Feather, MaterialCommunityIcons, Ionicons} from '@expo/vector-icons'
+import CustomListItem from '../components/CustomListItem'
 import styled from 'styled-components/native';
+// import { ScrollView } from 'react-native-gesture-handler'
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({navigation}) => {
+  
+  // // transactions
+  // const [transactions, setTransactions] = useState([])
+  // useEffect(() => {
+  //   const unsubscribe = db
+  //     .collection('expense')
+  //     .orderBy('timestamp', 'desc')
+  //     .onSnapshot(
+  //       (snapshot) =>
+  //         setTransactions(
+  //           snapshot.docs.map((doc) => ({
+  //             id: doc.id,
+  //             data: doc.data(),
+  //           }))
+  //         ) 
+  //     )
+  //   return unsubscribe
+  // }, [])
 
-  const [totalBalance, setTotalBalance] = useState('₹ 20,000')
+  const [totalBalance, setTotalBalance] = useState(0)
   const [confirm, setConfirm] = useState(false)
   const [reset, setReset] = useState(false)
 
   const [filter, setFilter] = useState([
-    { id: '1', data: 'Saurabh Powar', rollno: '191060053', time: '14:23' },
-    { id: '2', data: 'Saurabh Powar', rollno: '191060058', time: '12:40' }
+    {id: '1', data: 'Saurabh Powar', rollno: '191060053', time: '14:23'}, 
+    {id: '2', data: 'Saurabh Powar', rollno: '191060058', time: '12:40'}
   ])
 
   const [date, setDate] = useState(null);
@@ -25,7 +44,7 @@ const HomeScreen = ({ navigation }) => {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
 
   useEffect(() => {
-    let date = today.getDate() + ' ' + (months[today.getMonth() + 1]) + ' ' + today.getFullYear();
+    let date = today.getDate()+' '+(months[today.getMonth()+1])+' '+today.getFullYear();
     setDate(date);
   }, []);
 
@@ -45,98 +64,110 @@ const HomeScreen = ({ navigation }) => {
   return (
     <>
       {/* <View style={styles.container}> */}
-      <StatusBar style='light' />
-      <MainContainer>
-        <UpperContainer style={styles.upper}>
-          <View style={styles.fullName}>
-            <View style={{ flexDirection: 'row' }}>
-              <View style={{ flexDirection: 'column' }}>
-                <Text style={{ fontSize: 18, fontWeight: 'bold', marginTop: '2%', color: '#F3DACC' }}>Welcome 🙏️,</Text>
-                <Text style={{ fontSize: 25, fontWeight: '600', color: '#FFFFFF' }}>
-                  Student Name
+        <StatusBar style='light' />
+        <MainContainer>
+          <UpperContainer style={styles.upper}>
+            <View style={styles.fullName}>
+              <View style={{flexDirection: 'row'}}>
+                <View style={{flexDirection: 'column'}}>
+                  <Text style={{fontSize: 18, fontWeight: 'bold', marginTop: '2%', color: '#F3DACC'}}>Welcome 🙏️,</Text>
+                    <Text style={{fontSize: 25, fontWeight: 'bold', color: '#FFFFFF'}}>
+                      Student Name
+                    </Text>
+                </View>
+                <Image 
+                  style={{ 
+                    resizeMode: 'contain', 
+                    height: 120, 
+                    width:120, 
+                    alignSelf:'flex-end', 
+                    marginLeft: '5%', 
+                    marginTop: '-7%'
+                    }} 
+                  source={require('../assets/eating_student.png') }>
+                </Image>
+              </View>
+            </View>
+          </UpperContainer>
+          <View style={styles.card}>
+            <View style={styles.cardTop}>
+              <View style={{flexDirection: 'row', marginBottom: '5%'}}>
+                <Ionicons name='calendar-outline' size={24} color='#311E15' />
+                <Text style={{marginLeft: '5%', color: '#311E15', fontSize: 20, fontWeight: 'bold'}}>
+                  {days[today.getDay()]}
+                </Text>
+                <Text style={{marginLeft: '5%', color: '#311E15', fontSize: 20}}>
+                  {date}
                 </Text>
               </View>
-              <Image
-                style={{
-                  resizeMode: 'contain',
-                  height: 120,
-                  width: 120,
-                  alignSelf: 'flex-end',
-                  marginLeft: '5%',
-                  marginTop: '-7%'
-                }}
-                source={require('../assets/eating_student.png')}>
-              </Image>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={{color: '#311E15', fontWeight: '700', fontSize: 18 }}>
+                  Total Entries Today
+                </Text>
+                <Ionicons name='people' size={24} color='#311E15' style={{marginLeft: '2%'}}/>
+
+                {/* <Text style={{marginLeft: 5, color: '#000000', fontSize: 20 }}>
+                  :
+                </Text> */}
+              </View>
+              <Text h3 style={{color: '#311E15'}}>
+                {totalBalance}
+              </Text>
             </View>
           </View>
-        </UpperContainer>
-        <View style={styles.card}>
-          <View style={styles.cardTop}>
-            <View style={{ flexDirection: 'row', marginTop: '2%' }}>
-              <Ionicons name='calendar' size={24} color='#311E15' />
-              <Text style={{ marginLeft: '5%', marginTop: 2, color: '#311E15', fontSize: 18, fontWeight: 'bold' }}>
-                {days[today.getDay()]}
-              </Text>
-              <Text style={{ marginLeft: '5%', marginTop: 2, color: '#311E15', fontSize: 18 }}>
-                {date}
-              </Text>
-            </View>
-            <View style={{ flexDirection: 'row', marginTop: '4%' }}>
-              <Text style={{ color: '#311E15', fontWeight: '600', fontSize: 20 }}>
-                Deposit Balance
-              </Text>
-              {/* <Ionicons name='people' size={24} color='#311E15' style={{marginLeft: '2%'}}/> */}
-              <Fontisto name="wallet" size={22} color="#311E15" style={{ marginLeft: '2%' }} />
-            </View>
-            <Text h3 style={{ color: '#311E15', marginTop: 10 }}>
-              {totalBalance}
+          <View style={styles.recentTitle}>
+            <Text  style={{color: '#311E15', fontSize: 18, fontWeight: '500'}}>
+            {/* 🧑‍🏫️ */}
+              Recent Entries 🧑‍🤝‍🧑️: 
             </Text>
           </View>
-        </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end' }}>
-          <Text style={styles.menu_text}>Today's Menu </Text>
-          <MaterialCommunityIcons name="chef-hat" size={32} color="#311E15" />
-        </View>
-        <ScrollView style={{ marginTop: '2%' }}>
-          <MenuTile
-            title='Breakfast'
-            menu='Poha, Bread Omlet and Tea'
-            image={0}
-          />
-          <MenuTile
-            title='Lunch'
-            menu='Paneer Masala, Chapati, Dal Fry and Rice'
-            image={1}
-          />
-          <MenuTile
-            title='Dinner'
-            menu='Pav Bhaaji, Veg Fried Rice, Gulab Jamun'
-            image={2}
-          />
-        </ScrollView>
+        {filter?.length > 0 ? (
+          <SafeAreaView style={styles.containerScroll}>
+          <ScrollView>
+            {filter?.map((info) => (
+              <View key={info.id}>
+                <CustomListItem
+                  info={info.data}
+                  id={info.id}
+                  rollno = {info.rollno}
+                  time = {info.time}
+                />
+              </View>
+            ))}
+          </ScrollView>
+        </SafeAreaView>
+        ) : (
+          <View style={styles.containerNull}>
+          <Ionicons name='people' size={24} color='#311E15' />
+            <Text h5 style={{color: '#311E15'}}>
+              No Entries
+            </Text>
+          </View>
+        )}
+      {/* </View> */}     
         <View style={styles.addButton}>
           <TouchableOpacity
-            style={{ marginLeft: '-10%' }}
+            style={{marginLeft: '-10%'}}
             activeOpacity={0.5}
-            onPress={() => navigation.navigate('Dashboard')}
+            onPress={() => navigation.navigate('Home')}
           >
             {/* <Ionicons name='ios-home' size={30} color='#FFFFFF' /> */}
-            <Ionicons name='ios-stats-chart-outline' size={28} color='#FFFFFF' />
+            <Ionicons name='ios-home-outline' size={30} color='#FFFFFF' />
           </TouchableOpacity>
           <TouchableOpacity
-            style={{ marginRight: '-10%' }}
+            style={{marginRight: '-10%'}}
             activeOpacity={0.5}
             onPress={() => navigation.navigate('All')}
           >
-            <MaterialIcons name='restaurant-menu' size={30} color='#FFFFFF' />
+            <Feather name='list' size={30} color='#FFFFFF' />
           </TouchableOpacity>
         </View>
-        <View style={{ width: 100, height: 100, borderRadius: 50, backgroundColor: 'white', alignSelf: 'center', top: '85%', position: 'absolute' }}>
+        <View style={{ width: 100, height: 100, borderRadius: 50, backgroundColor: 'white', alignSelf: 'center', top: '85%', position:'absolute'}}>
           <TouchableOpacity
-            style={styles.plusButton}
-            onPress={() => navigation.navigate('QRGen')}
-            activeOpacity={0.5}
-          >
+              style={styles.plusButton}
+              onPress={() => navigation.navigate('QRGen')}
+              activeOpacity={0.5}
+            >
             <Ionicons name='md-qr-code-outline' size={32} color='#FFFFFF' />
           </TouchableOpacity>
         </View>
@@ -156,12 +187,6 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 
-  menu_text: {
-    fontSize: 26,
-    // textAlign: 'center',
-    marginTop: '4%'
-  },
-
   fullName: {
     flex: 1,
     marginTop: '20%',
@@ -173,7 +198,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     width: '120%',
     marginLeft: '-10%',
-    marginTop: '-5%',
+    marginTop: '-5%', 
     margin: 'auto',
     borderRadius: 100,
     backgroundColor: '#311E15'
@@ -182,11 +207,10 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#F3DACC',
     width: '85%',
-    height: '20%',
     padding: 10,
     borderRadius: 10,
     shadowColor: '#FFFFFF',
-    shadowOffset: { width: 10, height: 15 },
+    shadowOffset: {width: 10, height: 15},
     shadowOpacity: 0.25,
     shadowRadius: 5,
     elevation: 10,
@@ -301,6 +325,22 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
 
+  no: {
+    width: '80%',
+    backgroundColor: 'green',
+    height: 50,
+    borderRadius: 20,
+    marginTop: '15%',
+  },
+
+  yes: {
+    width: '80%',
+    backgroundColor: 'red',
+    height: 50,
+    borderRadius: 20,
+    marginTop: '15%',
+  },
+  
   containerScroll: {
     backgroundColor: 'white',
     padding: 0,
